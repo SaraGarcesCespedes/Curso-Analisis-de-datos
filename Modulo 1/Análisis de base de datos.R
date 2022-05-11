@@ -15,12 +15,13 @@ library(ggplot2) # Crea visualizaciones elegantes de datos
 library(stringr) # Permite manipular strings
 library(plotly) # Crea gráficos interactivos
 library(RColorBrewer) # Proporciona varias paletas de colores
+library(tidyselect)
 
 
 # Leer base de datos ------------------------------------------------------
 
-df <- read.csv2("https://raw.githubusercontent.com/RLadiesMedellin/Meetup2-Tallerggplot2/master/Data/EncuestaJuventud.csv", 
-                header = TRUE, sep = ";", dec = ",")
+df <- read.csv2("https://raw.githubusercontent.com/SaraGarcesCespedes/Curso-Analisis-de-datos/main/Modulo%201/Encuesta_Juventud.csv", 
+                header = TRUE, sep = ",", dec = ",", stringsAsFactors = TRUE)
 
 # Describir la base de datos ----------------------------------------------
 
@@ -39,6 +40,8 @@ colnames(df)
 # ver un resumen de df
 str(df)
 
+# Resumen de las variables
+summary(df)
 
 # Organizar la base de datos ----------------------------------------------
 
@@ -83,6 +86,35 @@ df <- df %>% mutate(nivelestudio_nuevo = case_when(
 
 unique(df$nivelestudio_nuevo)
 
+# Crear nueva columna con rango de edades
+min(df$edad)
+max(df$edad)
+
+df <- df %>% mutate(rangoedad = case_when(between(edad, 14, 17) ~ "14-17",
+                                          between(edad, 18, 21) ~ "18-21", 
+                                          between(edad, 22, 26) ~ "22-26",))
+
+unique(df$rangoedad)
+
+# Solucionar errores en la base de datos
+unique(df$genero)
+unique(df$estudia)
+
+# Poner todas las columnas categoricas en minuscula
+df <- mutate_if(df, is.factor, str_to_lower)
+unique(df$estudia)
+
+# Modificar columna genero
+unique(df$genero)
+
+df <- df %>% mutate(genero = case_when(genero == "femenino" ~ "mujer",
+                                       genero == "maculino" ~ "hombre",
+                                       genero == "hombre" ~ "hombre",
+                                       genero == "mujer" ~ "mujer"))
+
+unique(df$genero)
+
+
 # Cambiar el orden de las columnas
 
 # Funcion relocate()
@@ -119,8 +151,7 @@ df_hombre <- df %>% filter(genero == "Hombre")
 
 # Analizar la base de datos -----------------------------------------------
 
-# Resumen de las variables
-summary(df)
+
 
 # Conteo por variable
 
@@ -255,9 +286,9 @@ df %>% group_by(valoracionoportunidadesdelaciudadparaestudiar) %>%
   labs(x = "Oportunidades para estudiar")+
   geom_text(size = 3.5,aes(label = Frecuencia), vjust = -0.5)+ 
   scale_y_continuous(breaks = seq(0,4000,500)) +
-  scale_x_discrete(limits = c("Muy desfavorable", "Desfavorable",
-                              "Ni favorable/ Ni desfavorable",
-                              "Favorable", "Muy favorable"))
+  scale_x_discrete(limits = c("muy desfavorable", "desfavorable",
+                              "ni favorable/ ni desfavorable",
+                              "favorable", "muy favorable"))
 
 # grafico valoracionoportunidadesdelaciudadparaestudiar por genero
 df %>% group_by(valoracionoportunidadesdelaciudadparaestudiar, genero) %>%
@@ -268,12 +299,12 @@ df %>% group_by(valoracionoportunidadesdelaciudadparaestudiar, genero) %>%
   labs(x = "Oportunidades para estudiar")+
   geom_text(size = 3.5,aes(label = Frecuencia), vjust = -0.5)+ 
   scale_y_continuous(breaks = seq(0,4000,500)) +
-  scale_x_discrete(limits = c("Muy desfavorable", "Desfavorable",
-                              "Ni favorable/ Ni desfavorable",
-                              "Favorable", "Muy favorable"),
-                   # labels = c("Muy \ndesfavorable", "Desfavorable",
-                   #            "Ni favorable \nNi desfavorable",
-                   #            "Favorable", "Muy \nfavorable")
+  scale_x_discrete(limits = c("muy desfavorable", "desfavorable",
+                              "ni favorable/ ni desfavorable",
+                              "favorable", "muy favorable"),
+                   labels = c("muy \ndesfavorable", "desfavorable",
+                              "ni favorable \nni desfavorable",
+                              "favorable", "muy \nfavorable")
                    ) +
   facet_wrap(~ genero) 
 
