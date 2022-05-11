@@ -88,7 +88,7 @@ class(genero)
 unclass(genero)
 table(genero)
 
-genero2 <- factor(c("male", "female", "female", "female", "mraale"),
+genero2 <- factor(c("male", "female", "female", "female", "male"),
                  levels = c("male", "female"))
 genero2
 unclass(genero2)
@@ -157,7 +157,7 @@ mean(x = vector)
 round(x = mean(vector), digits = 1)
 min(x = vector)
 max(x = vector)
-factorial(x = 3) m
+factorial(x = 3)
 lanzo_TR
 sample(x = 1:4, size = 2)
 sample(x = vector, size = 2, replace = TRUE)
@@ -222,7 +222,7 @@ y
 plot(x, y)
 
 
-qplot(x, y)
+HISTqplot(x, y)
 
 # Histograma
 x <- c(1, 2, 2, 2, 3, 3)
