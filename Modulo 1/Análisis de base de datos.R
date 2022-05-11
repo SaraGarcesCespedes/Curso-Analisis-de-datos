@@ -15,7 +15,6 @@ library(ggplot2) # Crea visualizaciones elegantes de datos
 library(stringr) # Permite manipular strings
 library(plotly) # Crea gráficos interactivos
 library(RColorBrewer) # Proporciona varias paletas de colores
-library(tidyselect)
 
 
 # Leer base de datos ------------------------------------------------------
@@ -143,8 +142,8 @@ df3 <- df %>% select(-rangoedad, -nivelestudio)
 # Filtrar segun condicion
 
 # Funcion filter()
-df_mujer <- df %>% filter(genero == "Mujer")
-df_hombre <- df %>% filter(genero == "Hombre")
+df_mujer <- df %>% filter(genero == "mujer")
+df_hombre <- df %>% filter(genero == "hombre")
 
 
 
