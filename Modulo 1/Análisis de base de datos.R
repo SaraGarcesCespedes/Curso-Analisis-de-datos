@@ -114,6 +114,9 @@ df3 <- df %>% select(-rangoedad, -nivelestudio)
 df_mujer <- df %>% filter(genero == "Mujer")
 df_hombre <- df %>% filter(genero == "Hombre")
 
+
+
+
 # Analizar la base de datos -----------------------------------------------
 
 # Resumen de las variables
