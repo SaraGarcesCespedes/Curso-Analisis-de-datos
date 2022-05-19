@@ -1,3 +1,7 @@
+# Cargar paquetes
+library(ggplot2)
+library(dplyr)
+
 # Creemos la base de datos
 
 restaurante <- 1:10
@@ -11,4 +15,9 @@ df <- data.frame(restaurante = restaurante,
                  poblacion = poblacion,
                  ventas = ventas)
 
-df
+# grafico de dispersion poblacion vs ventas
+ggplot(df, aes(x = poblacion, y = ventas)) +
+  geom_point() +
+  labs(x = "Población Universidad", y = "Ventas Mensuales") +
+  scale_x_continuous(breaks = seq(0, 26000, 5000)) +
+  scale_y_continuous(breaks = seq(0, 202000000, 20000000))
