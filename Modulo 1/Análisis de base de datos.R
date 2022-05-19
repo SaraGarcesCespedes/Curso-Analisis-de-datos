@@ -95,6 +95,8 @@ df <- df %>% mutate(rangoedad = case_when(between(edad, 14, 17) ~ "14-17",
 
 unique(df$rangoedad)
 
+
+
 # Solucionar errores en la base de datos
 unique(df$genero)
 unique(df$estudia)
@@ -150,29 +152,56 @@ df_hombre <- df %>% filter(genero == "hombre")
 
 # Analizar la base de datos -----------------------------------------------
 
-
-
 # Conteo por variable
 
-# Cantidad de hombres y de mujeres 
+# ¿Cúal es la cantidad de hombres y la cantidad de mujeres encuestados? 
 df %>% group_by(genero) %>%
        summarise(conteo = n())
        
 
-# Cantidad de personas por rango de edad
+# ¿Cúal es la cantidad de jovenes encuestados por rango de edad?
 df %>% group_by(rangoedad) %>%
        summarise(conteo = n())
 
-# Cantidad de personas y promedio de edad por estado civil
+# Cantidad de jovenes casados o que viven con su pareja y su promedio de edad
 df %>% group_by(estadocivil) %>%
        summarise(conteo = n(),
                  prom_edad = mean(edad)) %>%
        arrange(-conteo)
 
-# Ver consumo de drogas diferenciado por genero
+# ¿Hay alguna diferencia en cuanto al consumo de drogas según el genero?
 df %>% group_by(genero, consumodrogas) %>%
        summarise(conteo = n())
        
+# ¿El gasto semanal en rumba aumenta a medida que aumenta la edad de los jovenes?
+df %>% group_by(rangoedad) %>%
+       summarise(prom_gasto_rumba = mean(gastosemanalrumba))
+
+# ¿La percepción de las mujeres respecto a las oportunidades laborales en la ciudad
+# es diferente a la de los hombres?
+df <- df %>% filter(valoracioninstitucionenhabilidadesdelmundolaboral != 0)
+
+df %>% group_by(genero, valoracioninstitucionenhabilidadesdelmundolaboral) %>%
+       summarise(conteo = n()) %>%
+       arrange(-conteo)
+
+# ¿La percepción de las mujeres respecto a las oportunidades de estudio en la ciudad
+# es diferente a la de los hombres?
+df %>% group_by(genero, valoracionoportunidadesdelaciudadparaestudiar) %>%
+  summarise(conteo = n()) %>%
+  arrange(-conteo)
+
+# Cantidad de jovenes entre 14-17 años que estan estudiando
+df %>% filter(rangoedad == "14-17") %>%
+       group_by(estudia) %>%
+       count()
+
+# Cantidad de jovenes entre 18-26 años que estan trabajando
+df %>% filter(rangoedad == "18-21" | rangoedad == "22-26") %>%
+  group_by(trabaja) %>%
+  count()
+
+
 
 # Construir graficos con ggplot2 ------------------------------------------
 
@@ -198,7 +227,7 @@ ggplotly(Plot)
 
 # Grafico de gastosemanalrumba vs edad vs estrato
 
-ggplot(data = df, aes(x = edad, y = gastosemanalrumba, colour = genero)) +
+ggplot(data = df, aes(x = edad, y = gastosemanalrumba, color = genero)) +
   geom_point(size = 2) + 
   theme_dark() +
   scale_x_continuous(breaks = seq(14,26,2)) +
@@ -298,7 +327,7 @@ df %>% group_by(valoracionoportunidadesdelaciudadparaestudiar, genero) %>%
   labs(x = "Oportunidades para estudiar")+
   geom_text(size = 3.5,aes(label = Frecuencia), vjust = -0.5)+ 
   scale_y_continuous(breaks = seq(0,4000,500)) +
-  scale_x_discrete(limits = c("muy desfavorable", "desfavorable",
+  scale_x_discrete(limits = c("muy desfavorable",   "desfavorable",
                               "ni favorable/ ni desfavorable",
                               "favorable", "muy favorable"),
                    labels = c("muy \ndesfavorable", "desfavorable",
