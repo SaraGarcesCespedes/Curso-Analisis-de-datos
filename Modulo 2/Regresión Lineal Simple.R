@@ -51,3 +51,10 @@ r2
 # calcular coeficiente de correlación
 coef_correlacio <- sqrt(r2)
 coef_correlacio
+
+
+# Prueba de hipotesis
+summary(modelo_rls)
+
+# Predicciones con el modelo
+predict(modelo_rls, data.frame(poblacion = 10000), interval = "confidence")
