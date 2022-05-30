@@ -56,5 +56,10 @@ coef_correlacio
 # Prueba de hipotesis
 summary(modelo_rls)
 
-# Predicciones con el modelo
+# Estimaciones con el modelo
+
+# Estimacion puntual
+predict(modelo_rls, data.frame(poblacion = 10000))
+
+# Estimacion por intervalo
 predict(modelo_rls, data.frame(poblacion = 10000), interval = "confidence")
