@@ -1,6 +1,8 @@
 # Cargar paquetes
 library(ggplot2)
 library(dplyr)
+library(readxl)
+library(GGally)
 
 # Leer base de datos
 df <- read_excel("C:/Users/Imagemaker_PC/Documents/Personal/UDEA/datos_antioquia.xlsx")
@@ -31,30 +33,36 @@ ggplot(df, aes(x = Poblacion, y = Homicidios)) +
 predict(modelo_rls, data.frame(Poblacion = 50836))
 
 # REGRESION LINEAL MULTIPLE-------------------------------------------------------------------------------------------------------------
-# grafiquemos cada el tiempo 
-library(GGally)
+
+ 
+# Gráfica de correlaciones entre las variables numéricas de la base de datos
 ggpairs(df %>% select(-Region, -Municipio), lower = list(continuous = "smooth"),
         diag = list(continuous = "barDiag"), axisLabels = "none")
 
 # Ajustemos un modelo de regresión múltiple a los datos usando la funcion lm
 modelo_rm <- lm(Homicidios ~  Poblacion + Desertores_escolares, data = df)
 
-# Coeficientes del modelo
-modelo_rm$coefficients
-
-# valor de coeficiente de determinación
-r2 <- summary(modelo_rm)$r.squared
-r2
-
-
-# Ajustemos un modelo de regresión múltiple a los datos usando la funcion lm
-modelo_rm <- lm(Homicidios ~ Desertores_escolares + Poblacion + Extorsiones + Lesiones_personales + Escenarios_deportivos, data = df)
-
-# Coeficientes del modelo
-modelo_rm$coefficients
-
-# valor de coeficiente de determinación
-r2 <- summary(modelo_rm)$r.squared
-r2
-
+# Resumen modelo
 summary(modelo_rm)
+
+# Estimaciones con el modelo
+
+# Estimacion puntual
+predict(modelo_rm, data.frame(Poblacion = 30000, Desertores_escolares = 450))
+
+# Estimacion por intervalo
+predict(modelo_rm, data.frame(Poblacion = 30000, Desertores_escolares = 450), interval = "confidence")
+
+# Aumentemos el número de variables
+
+# Ajustemos un modelo de regresión a los datos usando la funcion lm
+modelo_desertores <- lm(Homicidios ~ Desertores_escolares, data = df)
+
+# Resumen modelo
+summary(modelo_desertores)
+
+# Agreguemos una variable cualitativa
+modelo_desertores <- lm(Homicidios ~ Desertores_escolares + Region, data = df)
+
+# Resumen modelo
+summary(modelo_desertores)
