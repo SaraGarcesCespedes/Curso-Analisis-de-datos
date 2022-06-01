@@ -5,7 +5,7 @@ library(readxl)
 library(GGally)
 
 # Leer base de datos
-df <- read_excel("C:/Users/Imagemaker_PC/Documents/Personal/UDEA/datos_antioquia.xlsx")
+df <- read_excel("datos_antioquia.xlsx")
 
 
 # grafico de dispersion poblacion vs ventas
@@ -66,3 +66,9 @@ modelo_desertores <- lm(Homicidios ~ Desertores_escolares + Region, data = df)
 
 # Resumen modelo
 summary(modelo_desertores)
+
+df$Region <- as.factor(df$Region)
+df$Region <- relevel(df$Region, ref = "Uraba")
+modelo <- lm(Homicidios ~ Desertores_escolares + Region, data = df) 
+summary(modelo)
+
