@@ -1,6 +1,7 @@
 # Cargar paquetes
 library(ggplot2)
 library(dplyr)
+library(readr)
 
 # Creemos la base de datos
 vendedores <- 1:15
@@ -38,3 +39,31 @@ ggplot(df, aes(x = antiguedad, y = bicicletas)) +
   geom_point(size = 3) +
   labs(x = "Antigüedad del vendedor (meses)", y = "Bicicletas vendidas") +
   stat_smooth(method = "lm", se = FALSE, col = "red", formula = y ~ poly(x, 2, raw = TRUE))
+
+
+
+# Regresion exponencial
+ebola <- read_delim("Modulo 2/ebola.csv", 
+                    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+head(df)
+
+# grafica del número de casos en el tiempo
+ggplot(ebola) + 
+  geom_line(aes(x=Day, y = totalSuspectCases)) +
+  labs(x = "Día", y = "Total de casos de Ebola")
+
+
+# grafica del número de casos en el tiempo: tranformación de variable Y
+ggplot(ebola) + 
+  geom_line(aes(x=Day, y = log(totalSuspectCases))) +
+  c
+
+
+# Ajustemos modelo de regresión lineal
+lm_ebola = lm(log(totalSuspectCases) ~ Day, data=ebola)
+summary(lm_ebola)
+
+ggplot(ebola) + 
+  geom_line(aes(x=Day, y = log(totalSuspectCases))) + 
+  geom_abline(intercept = 4.54, slope = 0.0216, color='red') + 
+  labs(x = "Día", y = "Total de casos de Ebola")
