@@ -344,5 +344,3 @@ df %>% group_by(estudia, trabaja) %>%
   theme_bw()
 
 
-
-

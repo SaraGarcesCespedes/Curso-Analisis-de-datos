@@ -49,14 +49,14 @@ head(df)
 
 # grafica del número de casos en el tiempo
 ggplot(ebola) + 
-  geom_line(aes(x=Day, y = totalSuspectCases)) +
+  geom_point(aes(x=Day, y = totalSuspectCases)) +
   labs(x = "Día", y = "Total de casos de Ebola")
 
 
 # grafica del número de casos en el tiempo: tranformación de variable Y
 ggplot(ebola) + 
-  geom_line(aes(x=Day, y = log(totalSuspectCases))) +
-  c
+  geom_point(aes(x=Day, y = log(totalSuspectCases))) +
+  labs(x = "Día", y = "log(Total de casos de Ebola)") 
 
 
 # Ajustemos modelo de regresión lineal
@@ -64,6 +64,6 @@ lm_ebola = lm(log(totalSuspectCases) ~ Day, data=ebola)
 summary(lm_ebola)
 
 ggplot(ebola) + 
-  geom_line(aes(x=Day, y = log(totalSuspectCases))) + 
+  geom_point(aes(x=Day, y = log(totalSuspectCases))) + 
   geom_abline(intercept = 4.54, slope = 0.0216, color='red') + 
   labs(x = "Día", y = "Total de casos de Ebola")

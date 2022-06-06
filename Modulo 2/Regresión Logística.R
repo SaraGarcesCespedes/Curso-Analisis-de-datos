@@ -39,7 +39,7 @@ df2 <- df %>% mutate(Resignation = ifelse(Resignation == "Yes", 1, 0))
 ggplot(df2, aes(x = MonthlyIncome, y = Resignation)) +
   geom_point(size = 5) +
   labs(x = "Salario Mensual", y = "Renuncia")
-
+dif
 model <- glm(Resignation ~MonthlyIncome, family = binomial(), data = df2)
 summary(model)
 
