@@ -66,4 +66,4 @@ summary(lm_ebola)
 ggplot(ebola) + 
   geom_point(aes(x=Day, y = log(totalSuspectCases))) + 
   geom_abline(intercept = 4.54, slope = 0.0216, color='red') + 
-  labs(x = "Día", y = "Total de casos de Ebola")
+  labs(x = "Día", y = "log(Total de casos de Ebola)")
