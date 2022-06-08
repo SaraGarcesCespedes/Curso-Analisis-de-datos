@@ -52,6 +52,7 @@ train_df %>% group_by(Parch) %>%
   count()
 
 train_df <- train_df %>% mutate(Travel_alone = ifelse(train_df$SibSp + train_df$Parch == 0, 1, 0))
+train_df$Travel_alone <- as.character(train_df$Travel_alone)
 train_df %>% group_by(Travel_alone) %>%
   count()
 
@@ -93,7 +94,7 @@ train_df$Survived <- as.numeric(train_df$Survived)
 modelo <- glm(Survived ~., data = train_df, family = binomial())
 summary(modelo)
 
-# Predicciones del modelo para los primeros 5 empleados
+# Predicciones del modelo para los primeros 5 pasajeros
 glm.probs <- predict(modelo, type = "response")
 glm.probs[1:5]
 
@@ -106,7 +107,9 @@ table(glm.pred, train_df$Survived)
 accuracy_model <- mean(glm.pred == train_df$Survived)
 accuracy_model
 
-# Hagamos predicciones con el modelo
+# Hagamos predicciones con el modelo usando la base de datos de test
+
+# preprocesamiento de la base de datos
 test_df$Age <- as.numeric(test_df$Age)
 test_df$Pclass <- as.character(test_df$Pclass)
 test_df$Fare <- as.numeric(test_df$Fare)
@@ -117,10 +120,12 @@ test_df$Age <- impute(test_df$Age, median)
 test_df$Fare <- impute(test_df$Fare, median)
 
 test_df <- test_df %>% mutate(Travel_alone = ifelse(SibSp + Parch == 0, 1, 0))
+test_df$Travel_alone <- as.character(test_df$Travel_alone)
 test_df <- test_df %>% select(-SibSp, -Parch, -Name, -Ticket, -Cabin,
                               -PassengerId)
 
 
+# prediccion
 predict(modelo, test_df, type = "response")
 
 
