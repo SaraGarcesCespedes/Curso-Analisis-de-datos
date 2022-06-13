@@ -10,6 +10,7 @@ bicicletas <- c(250, 296, 317, 300, 162, 150, 296, 308, 189, 235, 83, 112, 67,
                 280, 189)
 
 
+
 df <- data.frame(vendedores = vendedores,
                  antiguedad = antiguedad,
                  bicicletas = bicicletas)
