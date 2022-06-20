@@ -48,13 +48,18 @@ plot(pruebas_multiples)
 
 # creamos base de datos
 marca <- c(rep("1", 6), rep("2", 6), rep("3", 6))
-numero_moscas <- c(72, 65, 67, 75, 62, 73, 55, 59, 68, 70, 53, 50, 
+numero_moscas <- c(72, 65, 77, 75, 62, 73, 55, 59, 68, 70, 53, 50, 
                    64, 74, 61, 58, 51, 69)
 orden_pruebas <- sample(1:18, size = 18, replace = FALSE)
 df <- data.frame(marca = marca,
                  numero_moscas = numero_moscas,
                  orden_pruebas = orden_pruebas)
 df
+
+
+# Analisis de varianza ANOVA
+anova <- aov(numero_moscas ~ marca, data = df)
+summary(anova)
 
 # Diagramas de caja
 ggplot(data = df, aes(x = numero_moscas, y = marca, fill = marca)) +
@@ -63,10 +68,6 @@ ggplot(data = df, aes(x = numero_moscas, y = marca, fill = marca)) +
   labs(y = "Marca de veneno",
        x = "Número de moscas muertas") + 
   theme(legend.position="none")
-
-# Analisis de varianza ANOVA
-anova <- aov(numero_moscas ~ marca, data = df)
-summary(anova)
 
 # Pruebas múltiples
 pruebas_multiples <- LSD.test(anova, "marca")
@@ -96,7 +97,7 @@ ggplot(df, aes(x=residuos))+
   scale_x_continuous(breaks = seq(-12, 12, 3))
 
 # gráfico qqplot
-qqPlot(residuos, #Un gráfico Cuantil-Cuantil de los residuos
+EnvStats::qqPlot(residuos, #Un gráfico Cuantil-Cuantil de los residuos
        pch =20, #Forma de los puntos
        main="QQ-Plot de los residuos", #Título principal
        xlab = "Cuantiles teóricos",  #Etiqueta eje x
