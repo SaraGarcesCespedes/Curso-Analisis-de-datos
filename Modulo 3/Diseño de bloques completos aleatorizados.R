@@ -26,6 +26,3 @@ ggplot(data = df, aes(x = tiempo, y = metodo, fill = metodo)) +
 # Pruebas múltiples
 pruebas_multiples <- LSD.test(anova, "metodo")
 pruebas_multiples
-
-# Gráfico de medias
-plot(pruebas_multiples)
