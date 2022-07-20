@@ -7,7 +7,7 @@ library(readxl)
 # Leer base de datos ------------------------------------------------------
 
 df <- read_excel("Modulo 4/Datos_MEDIFIS.xlsx")
-
+df <- df %>% select(-observacion)
 # Resumen base de datos ---------------------------------------------------
 
 str(df)
@@ -22,44 +22,54 @@ sum(is.na(df))
 # Métricas descriptivas
 library(rstatix)
 
-df %>% select(-observacion) %>%
-       get_summary_stats(type = "common")
+df %>% get_summary_stats(type = "common")
 
 library(pastecs)
-stat.desc(df %>% select(-observacion))[14, ]
+stat.desc(df)[14, ]
 
              
 
 # Coeficiente de Asimetría
 library(moments)
 
-df %>% select(-observacion) %>%
-       summarise_if(is.numeric, skewness)
+df %>% summarise_if(is.numeric, skewness)
 
 # Coeficiente de Curtosis
 
-df %>% select(-observacion) %>%
-       summarise_if(is.numeric, kurtosis)
+df %>% summarise_if(is.numeric, kurtosis)
 
-# Histogramas
-ggplot(df, aes(x=est))+
-  geom_histogram(fill="#702899", color="black", bins = 10) +
-  theme_bw() + 
-  labs(y = "Frecuencia") +
-  geom_vline(aes(xintercept = mean(est)),col='red',size=2)
+# Calcular la varianza de una variable
+var(df$pes)
 
-ggplot(df, aes(x=lrt))+
-  geom_histogram(fill="#702899", color="black", bins = 10) +
-  theme_bw() + 
-  labs(y = "Frecuencia") +
-  geom_vline(aes(xintercept = mean(lrt)),col='red',size=2)
+# Calcular la covarianza entre dos variables
+cov(df$est, df$pes)
 
-ggplot(df, aes(x=aes))+
-  geom_histogram(fill="#702899", color="black", bins = 10) +
-  theme_bw() + 
-  labs(y = "Frecuencia") +
-  geom_vline(aes(xintercept = mean(aes)),col='red',size=2)
+# Matriz de varianzas y covarianzas
+matriz_var_cov <- cov(df %>% select(-sexo))
 
+# Variabilidad total
+matriz_var_cov <- cov(df %>% select(-sexo, -pes))
 
+diag(matriz_var_cov)
+sum(diag(matriz_var_cov))
 
+# Variabilidad promedio
+mean(diag(matriz_var_cov))
 
+# Varianza generalizada (Peña y Rodriguez)
+det(matriz_var_cov)
+
+# Desviacion típica generalizada (Peña y Rodriguez)
+det(matriz_var_cov)^(1/2)
+
+# Variabilidad promedio (Peña y Rodriguez)
+det(matriz_var_cov)^(1/6)
+
+# Desviación promedio (Peña y Rodriguez)
+(det(matriz_var_cov)^(1/6))^(1/2)
+
+# Correlación entre dos variables
+cor(df$est, df$lpie)
+
+# Matriz de correlación
+cor(df %>% select(-sexo))

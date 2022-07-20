@@ -53,14 +53,25 @@ shapiro.test(residuos)
 # gráfica de valores estimados versus residuos
 
 # distancia promedio de vuelo de cada diseño
-prom_distancia <- df %>% group_by(diseno) %>%
-                         summarise(prom = mean(distancia))
-prom_distancia
+prom_distancia_diseno <- df %>% group_by(diseno) %>%
+                                summarise(prom = mean(distancia))
+
+prom_distancia_lanzador <- df %>% group_by(lanzador) %>%
+  summarise(prom = mean(distancia))
+
 
 df$residuos <- residuos
-df <- df %>% mutate(prom_distancia = ifelse(diseno == "A", 9.15, 8.45))
+df <- df %>% mutate(prom_diseno = ifelse(diseno == "A", 9.15, 8.45))
+df <- df %>% mutate(prom_lanzador = case_when(lanzador == 1 ~ 7.7,
+                                              lanzador == 2 ~ 10.4, 
+                                              lanzador == 3 ~ 6.52,
+                                              lanzador == 4 ~ 7.6,
+                                              lanzador == 5 ~ 9.62,
+                                              lanzador == 6 ~ 11))
 
-ggplot(data = df, aes(x = prom_distancia, y = residuos)) +
+df <- df %>% mutate(residual_manual = distancia - prom_diseno - prom_lanzador + 8.7975)
+
+ggplot(data = df, aes(x = estimado, y = residuos)) +
   geom_point() + 
   theme_bw() +
   labs(y = "Residuos",
