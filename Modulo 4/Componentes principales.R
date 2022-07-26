@@ -2,11 +2,18 @@ library(ggplot2)
 library(dplyr)
 library(readxl)
 
-# Leer base de datos ------------------------------------------------------
+# Calculas valores y vectores propios de una matriz
 
-df <- read_excel("Modulo 4/Datos_MEDIFIS.xlsx")
-df <- df %>% select(pes, est)
+M <- matrix(c(1,-1,0,3,2,1,-2,3,4), ncol = 3)
+M
 
-# Grafico de dispersión
-ggplot(df, aes(est, pes)) +
-  geom_point()
+cov_matrix <- cov(M)
+cov_matrix
+
+e <- eigen(cov_matrix)
+e$values
+e$vectors
+
+
+
+
