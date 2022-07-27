@@ -54,7 +54,7 @@ cov(df$est, df$pes)
 matriz_var_cov <- cov(df_new)
 
 # Variabilidad total
-matriz_var_cov_new <- cov(df_new %>% select(-pes))
+matriz_var_cov_new <- cov(df_new)
 
 diag(matriz_var_cov_new)
 sum(diag(matriz_var_cov_new))
@@ -68,6 +68,15 @@ cor(df_new$est, df_new$lpie)
 # Matriz de correlación
 cor(df_new)
 
+# Graficar la matriz de correlaciones
+library(ggcorrplot)
+
+# calculate correlation matrix and round to 1 decimal place:
+corr_matrix <- df_new %>% 
+               cor() %>% 
+               round(1)
+
+ggcorrplot(corr_matrix, type = "lower", lab = T, show.legend = F)
 
 # GRAFICOS ----------------------------------------------------------------
 
@@ -92,8 +101,6 @@ library(plotly)
 plot_ly(x=df_new$est, y=df_new$pes, z=df_new$lpie, 
         type="scatter3d", mode="markers")
 
-# Calcular distancia euclidiana
-dist(df_new, method = 'euclidean')
 
 # Matriz de dispersión
 pairs(df_new)
@@ -121,6 +128,11 @@ stars(df_new_std, labels = df_original$observacion, key.loc=c(10,1.8))
 library(aplpack)
 faces(df_new_std, labels = df_original$observacion)
 
+
+# Concepto de distancia ---------------------------------------------------
+
+# Calcular distancia euclidiana
+dist(df_new, method = 'euclidean')
 
 # Calcular la distancia euclidiana ponderada
 M <- diag(diag(matriz_var_cov))
