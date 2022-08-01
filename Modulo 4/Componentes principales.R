@@ -15,6 +15,12 @@ e <- eigen(cov_matrix)
 e$values
 e$vectors
 
+eigen(cov_matrix)
+
+# PRIMER COMPONENTE PRINCIPAL
+# CP1 = -0.22*X1 -0.27*X2 + 0.93*X3
+# CP2 = 0.85*X1 - 0.51*X2 + 0.06*X3
+# CP3 = 0.46*X1 + 0.81*X2 + 0.34*X3
 
 # Componentes principales -------------------------------------------------
 
@@ -30,6 +36,7 @@ corr_matrix <- df %>%
   cor() %>% 
   round(1)
 
+library(ggcorrplot)
 ggcorrplot(corr_matrix, type = "lower", lab = T, show.legend = F)
 
 # Calcular componentes principales
@@ -41,12 +48,19 @@ df.pca$rotation
 # Porcentaje de variabilidad explicada por cada componente
 summary(df.pca)
 
-# Puntaje de cada observación sobre los CP
-df.pca$x
+# valores propios
+df.pca$sdev^2
 
 # Gráfica del porcentaje de variabilidad explicada por cada CP
 library(factoextra)
 fviz_eig(df.pca, addlabels = TRUE)
+
+# Puntaje de cada observación sobre los CP
+df.pca$x
+
+# Nueva base de datos con 2 componentes principales
+df_new <- df.pca$x[, c(1, 2)]
+df_new
 
 # Gráfico de contribuciones
 fviz_contrib(df.pca, 
@@ -71,9 +85,5 @@ fviz_pca_ind(df.pca,
 fviz_pca_var(df.pca,
              repel = TRUE)
 
-# Gráfico de individuos y variables
-fviz_pca_biplot(df.pca,
-                repel = TRUE,
-                col.ind = as.factor(df_original$sexo))
 
 
