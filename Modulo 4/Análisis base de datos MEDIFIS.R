@@ -152,3 +152,7 @@ mahalanobis(df_new, colMeans(df_new), cov(df_new))
 library(distances)
 distances(as.matrix(df_new), normalize = "mahalanobize")
 
+# grafica de las distancias entre individuos
+library(factoextra)
+distance <- get_dist(df_new)
+fviz_dist(distance, gradient = list(low = "#00AFBB", mid = "white", high = "#FC4E07"))
