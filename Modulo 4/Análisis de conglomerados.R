@@ -1,6 +1,7 @@
 library(readxl)
 library(factoextra)
 library(cluster)
+library(dplyr)
 
 # EJEMPLO BASE DE DATOS clientes -----------------------------------------------      # Loading the data set
 df <- read.csv("Modulo 4/Mall_Customers.csv", sep = ";")
