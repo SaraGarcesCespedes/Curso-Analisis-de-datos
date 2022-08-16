@@ -78,6 +78,16 @@ pronostico4 <- forecast(prom_moviles)
 print(pronostico4)
 plot(pronostico4)
 
+# Usar ses() para pronosticar el número de pasajeros para el siguiente año
+pronostico5 <- ses(AP, h=12, alpha=0.2)
+autoplot(pronostico5, xlab = "Mes", ylab = "Pasajeros")
+
+# Usar HoltWinters() para pronosticar el número de pasajeros para el siguiente año
+hw <- HoltWinters(AP, seasonal = "mult")
+plot(hw)
+
+pronostico6 <- predict(hw, n.ahead=12)
+ts.plot(AP, pronostico6, lty=1:2)
 
 
 # Evaluación de los métodos de pronóstico ---------------------------------
@@ -101,6 +111,10 @@ pronostico2_train <- naive(AP_train, h = 12)
 pronostico3_train <- snaive(AP_train, h = 12)
 prom_moviles_train <- sma(AP_train, order = 6, h = 12)
 pronostico4_train <- forecast(prom_moviles_train)
+pronostico5_train <- ses(AP_train, h = 12, alpha = 0.2)
+hw_train <- HoltWinters(AP_train, seasonal = "mult")
+pronostico6_train <- predict(hw_train, n.ahead=12)
+
 
 # Indicadores de precisión de pronósticos
 library(Metrics)
@@ -110,10 +124,13 @@ results$pronostico1 <- round(pronostico1_train$model$mu, 0)
 results$pronostico2 <- round(pronostico2_train$model$future, 0)
 results$pronostico3 <- round(pronostico3_train$model$future, 0)
 results$pronostico4 <- round(pronostico4_train$model$forecast, 0)
+results$pronostico5 <- round(pronostico5_train$mean, 0)
+results$pronostico6 <- round(as.numeric(pronostico6_train), 0)
 
 # RMSE
 rmse(results$x, results$pronostico1)
 rmse(results$x, results$pronostico2)
 rmse(results$x, results$pronostico3)
 rmse(results$x, results$pronostico4)
-
+rmse(results$x, results$pronostico5)
+rmse(results$x, results$pronostico6)
