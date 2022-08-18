@@ -103,7 +103,6 @@ length(AP)
 length(AP_train)
 length(AP_test)
 
-# grafica
 
 # Implemetar métodos con base de datos de entrenamiento
 pronostico1_train <- meanf(AP_train, h = 12)
@@ -134,3 +133,71 @@ rmse(results$x, results$pronostico3)
 rmse(results$x, results$pronostico4)
 rmse(results$x, results$pronostico5)
 rmse(results$x, results$pronostico6)
+
+
+
+# Crear objetos de clase ts -----------------------------------------------
+datos <- sample(1:50, 10)
+ts(datos, frequency = 4, start = c(1959, 2)) # frequency 4 => Quarterly Data
+ts(1:10, frequency = 12, start = 1990) # freq 12 => Monthly data. 
+ts(datos, start=c(2009), end=c(2014), frequency=1) # Yearly Data
+ts(datos, frequency=365, start=c(2017, 152)) # Daily data
+
+
+# Modelos de series de tiempo ---------------------------------------------
+
+# Modelo AR
+AR <- arima(AP_train, order = c(1,0,0)) #order: (p,d,q)
+print(AR)
+
+# Prediccion con modelo AR
+predict(AR)
+predict_AR$pred
+
+# Prediccion de los proximos 12 meses
+predict_AR <- predict(AR, n.ahead = 12)$pred
+
+# Grafico predicciones
+ts.plot(AP_train, xlim = c(1949, 1961))
+points(predict_AR, type = "l", col = 2)
+
+# Modelo MA
+MA <- arima(AP_train, order = c(0,0,1)) #order: (p,d,q)
+print(MA)
+
+# Prediccion con modelo MA
+predict(MA)
+predict_MA$pred
+
+# Prediccion de los proximos 12 meses
+predict_MA <- predict(MA, n.ahead = 12)$pred
+
+# Grafico predicciones
+ts.plot(AP_train, xlim = c(1949, 1961))
+points(predict_MA, type = "l", col = 2)
+
+# Modelo ARIMA
+ARMA <- arima(AP_train, order = c(1,0,1)) #order: (p,d,q)
+print(ARMA)
+
+# Prediccion con modelo AR
+predict(ARMA)
+predict_ARMA$pred
+
+# Prediccion de los proximos 12 meses
+predict_ARMA <- predict(ARMA, n.ahead = 12)$pred
+
+# Grafico predicciones
+ts.plot(AP_train, xlim = c(1949, 1961))
+points(predict_ARMA, type = "l", col = 2)
+
+# Evaluacion precision de pronosticos
+results <- as.data.frame(AP_test)
+results$ar <- round(as.numeric(predict_AR), 0)
+results$ma <- round(as.numeric(predict_MA), 0)
+results$arma <- round(as.numeric(predict_ARMA), 0)
+
+# RMSE
+rmse(results$x, results$ar)
+rmse(results$x, results$ma)
+rmse(results$x, results$arma)
