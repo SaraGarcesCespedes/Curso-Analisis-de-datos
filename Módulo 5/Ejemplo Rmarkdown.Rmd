@@ -1,0 +1,104 @@
+---
+title: "Pronosticos"
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+date: '2022-08-21'
+author: "Sara Garces, Laura Garces"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Serie de tiempo
+
+Esta base de datos contiene la cantidad de pasajeros mensuales de una aerolinea entre **1949** y **1960**:
+
+```{r echo=TRUE}
+data("AirPassengers")
+AP <- AirPassengers
+print(AP)
+```
+
+#### Gráfico de la serie de tiempo
+
+```{r echo=FALSE}
+plot(AP)
+```
+
+### Pronósticos
+
+#### Dividimos la base de datos
+```{r echo=FALSE}
+library(TSstudio)
+
+# División de base de datos en train y test
+split_AP <- ts_split(ts.obj = AP, sample.out = 12)
+AP_train <- split_AP$train
+AP_test <- split_AP$test
+```
+
+Vamos a utilizar los siguientes modelos para pronosticar la cantidad de pasajeros mensuales del año siguiente:
+
+- Modelo AR
+- Modelo MA
+- Modelo ARMA
+
+1. Modelo AR
+
+La ecuación de este modelo es: $\hat y_t = \mu + \phi_1(y_{t-1}-\mu)$
+
+$$
+\hat y_t = \mu + \phi_1(y_{t-1}-\mu)
+$$
+```{r echo=FALSE}
+AR <- arima(AP_train, order = c(1,0,0)) #order: (p,d,q)
+print(AR)
+
+# Prediccion de los proximos 12 meses
+predict_AR <- predict(AR, n.ahead = 12)$pred
+print(predict_AR)
+```
+
+2. Modelo MA
+
+```{r echo=FALSE}
+# Modelo MA
+MA <- arima(AP_train, order = c(0,0,1)) #order: (p,d,q)
+print(MA)
+
+# Prediccion de los proximos 12 meses
+predict_MA <- predict(MA, n.ahead = 12)$pred
+print(predict_MA)
+```
+
+3. Modelo ARMA
+
+```{r echo=FALSE}
+ARMA <- arima(AP_train, order = c(1,0,1)) #order: (p,d,q)
+print(ARMA)
+
+# Prediccion de los proximos 12 meses
+predict_ARMA <- predict(ARMA, n.ahead = 12)$pred
+print(predict_ARMA)
+```
+
+### Evaluación de la precisión del pronóstico
+
+```{r echo=FALSE}
+library(Metrics)
+
+# Evaluacion precision de pronosticos
+results <- as.data.frame(AP_test)
+results$ar <- round(as.numeric(predict_AR), 0)
+results$ma <- round(as.numeric(predict_MA), 0)
+results$arma <- round(as.numeric(predict_ARMA), 0)
+```
+
+```{r echo=TRUE}
+print(rmse(results$x, results$ar))
+print(rmse(results$x, results$ma))
+print(rmse(results$x, results$arma))
+```
